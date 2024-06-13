@@ -6,10 +6,15 @@ namespace IdentityServer
 {
     public static class Config
     {
+        public const string Admin = "Admin";
+        public const string User = "User";
+
         public static IEnumerable<ApiScope> ApiScopes =>
-            new List<ApiScope>
+            new ApiScope[]
             {
-                new ApiScope("WebApi", "Web Api")
+                new ApiScope("web-api"),
+                new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
+
             };
         public static IEnumerable<IdentityResource> IdentityResources =>
             new List<IdentityResource>
@@ -20,41 +25,57 @@ namespace IdentityServer
         public static IEnumerable<ApiResource> ApiResources =>
             new List<ApiResource>()
             {
-                new ApiResource("WebApi", "Web API", new []
-                {JwtClaimTypes.Name})
+                new ApiResource(IdentityServerConstants.LocalApi.ScopeName),
+                new ApiResource("web-api-resource", "web-api-resource")
                 {
-                    Scopes={"WebApi"}
+                    ApiSecrets = new List<Secret>
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    Scopes=
+                    {
+                        "web-api"
+                    }
                 }
             };
         public static IEnumerable<Client> Clients =>
              new List<Client> 
              {
-                new Client()
+                new Client
                 {
                     ClientId = "web-api",
-                    ClientName = "client",
-                    AllowedGrantTypes = GrantTypes.Code,
+                    ClientName = "web-api",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword
+                    .Append(OidcConstants.GrantTypes.RefreshToken).ToList(),
                     RequireClientSecret = false,
-                    RequirePkce = true,
+                    ClientSecrets = { new Secret("my_secret".Sha256()) },
                     RedirectUris =
                     {
-                        "http://.../signin-oidc"
+                        "http://localhost:5003/callback.html"
                     },
                     AllowedCorsOrigins =
                     {
-                        "http://..."
+                        "http://localhost:5003"
                     },
                     PostLogoutRedirectUris =
                     {
-                        "http://.../signout-oidc"
+                        "http://localhost:5003/index.html"
                     },
+                    AllowOfflineAccess = true,
+                    AllowAccessTokensViaBrowser = true,
+                    AlwaysSendClientClaims = true,
+                    AlwaysIncludeUserClaimsInIdToken = true,
+
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "WebApi"
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        IdentityServerConstants.LocalApi.ScopeName,
+                        "web-api"
                     },
-                    AllowAccessTokensViaBrowser = true
+
 
                 }
              };
