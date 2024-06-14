@@ -10,6 +10,8 @@ using IdentityServer4.Validation;
 using IdentityServer4.AspNetIdentity;
 using IdentityServer.Services;
 using IdentityServer4.Services;
+using PlaygroundProject.ViewModels;
+using System.Web.Mvc;
 
 internal class Program
 {
@@ -97,7 +99,10 @@ internal class Program
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
-
+        app.MapControllerRoute(
+    name: "EnumRoute",
+    pattern: "{controller=User}/{action=GetToken}/{rolesEnum?}",
+    new {controller ="User", action = "GetToken" });
         app.UseDeveloperExceptionPage();
 
 

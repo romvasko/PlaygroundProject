@@ -43,6 +43,11 @@ namespace IdentityServer.Services
                 claims.Add(new Claim(JwtClaimTypes.FamilyName, user.LastName));
             }
 
+            if (rolename != null)
+            {
+                claims.Add(new Claim(JwtClaimTypes.Role, rolename));
+            }
+
             context.IssuedClaims.AddRange(claims);
 
 
