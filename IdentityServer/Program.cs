@@ -99,10 +99,6 @@ internal class Program
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
-        app.MapControllerRoute(
-    name: "EnumRoute",
-    pattern: "{controller=User}/{action=GetToken}/{rolesEnum?}",
-    new {controller ="User", action = "GetToken" });
         app.UseDeveloperExceptionPage();
 
 
