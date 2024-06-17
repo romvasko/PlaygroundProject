@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PlaygroundProject.Services.Interfaces;
-using PlaygroundProject.ServicesResponce;
+using PlaygroundProject.ServicesResponse;
 using PlaygroundProject.ViewModels;
 using System.Security.Cryptography.X509Certificates;
 
@@ -33,7 +33,7 @@ namespace PlaygroundProject.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminOnly()
         {
-            var responce = new AdminOnlyResponce();
+            var responce = new AdminOnlyResponse();
             return Ok(responce.Message);
         }
     }

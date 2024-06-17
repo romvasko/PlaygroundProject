@@ -1,10 +1,10 @@
-﻿using PlaygroundProject.ServicesResponce;
+﻿using PlaygroundProject.ServicesResponse;
 using PlaygroundProject.ViewModels;
 
 namespace PlaygroundProject.Services.Interfaces
 {
     public interface IUserService
     {
-        public Task<GetTokenResponce> GetToken(Roles role);
+        public Task<GetTokenResponse> GetToken(Roles role);
     }
 }

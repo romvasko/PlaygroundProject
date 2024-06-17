@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using PlaygroundProject.Services.Interfaces;
-using PlaygroundProject.ServicesResponce;
+using PlaygroundProject.ServicesResponse;
 using PlaygroundProject.ViewModels;
 
 namespace PlaygroundProject.Services.Implementations
@@ -10,7 +10,7 @@ namespace PlaygroundProject.Services.Implementations
         private const string IdentityUrl = "https://localhost:7094";
         public UserService() { }
 
-        public async Task<GetTokenResponce> GetToken(Roles role)
+        public async Task<GetTokenResponse> GetToken(Roles role)
         {
             var client_id = "web-api";
             var grant_type = "password";
@@ -38,7 +38,7 @@ namespace PlaygroundProject.Services.Implementations
     });
 
             var response = await client.PostAsync(IdentityUrl + "/connect/token", content);
-            GetTokenResponce tokenResponce = new();
+            GetTokenResponse tokenResponce = new();
             if (!response.IsSuccessStatusCode)
             {
                 tokenResponce.ErrorMessage = await response.Content.ReadAsStringAsync();

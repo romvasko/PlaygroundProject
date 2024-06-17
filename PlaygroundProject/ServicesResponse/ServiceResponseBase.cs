@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace PlaygroundProject.ServicesResponce
+namespace PlaygroundProject.ServicesResponse
 {
     public abstract class ServiceResponseBase
     {

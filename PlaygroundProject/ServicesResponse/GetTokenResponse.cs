@@ -1,8 +1,8 @@
 ﻿using PlaygroundProject.ViewModels;
 
-namespace PlaygroundProject.ServicesResponce
+namespace PlaygroundProject.ServicesResponse
 {
-    public class GetTokenResponce : ServiceResponseBase
+    public class GetTokenResponse : ServiceResponseBase
     {
         public TokenViewModel TokenViewModel { get; set; }
     }

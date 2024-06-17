@@ -1,4 +1,4 @@
-﻿namespace PlaygroundProject.ServicesResponce;
+﻿namespace PlaygroundProject.ServicesResponse;
 
 public enum Errors
 {

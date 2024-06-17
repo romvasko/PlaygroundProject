@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using PlaygroundProject.Controllers;
 using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
+using PlaygroundProject.Middlewares;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -112,10 +113,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<UnauthorisedMessageSwap>();
+
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
+
+
+
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
