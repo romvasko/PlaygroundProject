@@ -1,13 +1,14 @@
 ﻿using PlaygroundProject.ServicesResponse;
+using PlaygroundProject.ServicesResponse.StatusResonse;
 using System.Text;
 
 namespace PlaygroundProject.Middlewares
 {
-    public class UnauthorisedMessageSwap
+    public class MessageSwapBasedOnStatusCode
     {
         private readonly RequestDelegate _next;
 
-        public UnauthorisedMessageSwap(RequestDelegate next)
+        public MessageSwapBasedOnStatusCode(RequestDelegate next)
         {
             _next = next;
         }
@@ -23,16 +24,24 @@ namespace PlaygroundProject.Middlewares
 
             var status = context.Response.StatusCode;
 
-            var response = new UnauthorizedResponse();
 
             if (status == 401)
             {
+                var response = new UnauthorizedResponse();
                 context.Response.Clear();
                 context.Response.StatusCode = status;
                 context.Response.ContentType = "text/plain";
                 await context.Response.WriteAsync(response.Message);
             }
 
+            if (status == 403)
+            {
+                var response = new AccessDeniedResponse();
+                context.Response.Clear();
+                context.Response.StatusCode = status;
+                context.Response.ContentType = "text/plain";
+                await context.Response.WriteAsync(response.Message);
+            }
 
         }
     }

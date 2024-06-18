@@ -1,4 +1,4 @@
-﻿namespace PlaygroundProject.ServicesResponse
+﻿namespace PlaygroundProject.ServicesResponse.StatusResonse
 {
     public class UnauthorizedResponse
     {
