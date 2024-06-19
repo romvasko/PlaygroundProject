@@ -1,7 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PlaygroundProject.Services.Interfaces;
 using PlaygroundProject.ServicesResponse;
 using PlaygroundProject.ViewModels;
+using System.Net;
+using IdentityModel.Client;
 
 namespace PlaygroundProject.Services.Implementations
 {
@@ -9,6 +12,92 @@ namespace PlaygroundProject.Services.Implementations
     {
         private const string IdentityUrl = "https://localhost:7094";
         public UserService() { }
+
+        private async Task<JsonResult> GetUserInfoJson(string token)
+        {
+            var client = new HttpClient();
+            var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = IdentityUrl + "/",
+                Policy =
+                {
+                    RequireHttps = false
+                }
+            });
+
+            if (disco.IsError)
+            {
+                Console.WriteLine(disco.Error);
+                return null;
+            }
+
+            var apiClient = new HttpClient();
+            apiClient.SetBearerToken(token);
+
+            var info = await apiClient.GetUserInfoAsync(new UserInfoRequest()
+            {
+                Address = disco.UserInfoEndpoint,
+                Token = token,
+            });
+
+            if (string.IsNullOrEmpty(info.Json.ToString()))
+            {
+                return null;
+            }
+            return new JsonResult(info.Json);
+        }
+
+        public async Task<GetUserInfoResponse> GetUserInfo(string token)
+        {
+            UserViewModel user;
+            var jsonUser = await GetUserInfoJson(token);
+
+            if (jsonUser == null)
+            {
+                return new GetUserInfoResponse()
+                {
+                    Success = false,
+                    StatusCode = HttpStatusCode.NotFound,
+                    ErrorMessage = "identity_server_error"
+                };
+            }
+
+            try
+            {
+                user = JsonSerializer.Deserialize<UserViewModel>(jsonUser.Value.ToString());
+            }
+            catch (Exception e)
+            {
+                return new GetUserInfoResponse()
+                {
+                    Success = false,
+                    StatusCode = HttpStatusCode.BadGateway,
+                    ErrorMessage = "user_mapping_error"
+                };
+            }
+
+            if (user == null)
+            {
+                return new GetUserInfoResponse()
+                {
+                    Success = false,
+                    StatusCode = HttpStatusCode.BadGateway,
+                    ErrorMessage = "user_mapping_error"
+                };
+            }
+
+            var customer = new CustomerViewModel()
+            {
+                Id = user.Sub,
+                Email = user.Email,
+                Role = user.Role
+            };
+
+            return new GetUserInfoResponse()
+            {
+                User = customer
+            };
+        }
 
         public async Task<GetTokenResponse> GetToken(Roles role)
         {

@@ -36,5 +36,13 @@ namespace PlaygroundProject.Controllers
             var responce = new AdminOnlyResponse();
             return Ok(responce.Message);
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            var userInfoResult = _userService.GetUserInfo();
+            return Ok(userInfoResult);
+        }
     }
 }
