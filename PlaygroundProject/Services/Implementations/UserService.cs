@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using PlaygroundProject.Services.Interfaces;
 using PlaygroundProject.ServicesResponse;
 using PlaygroundProject.ViewModels;
 using System.Net;
 using IdentityModel.Client;
+using Newtonsoft.Json;
 
 namespace PlaygroundProject.Services.Implementations
 {
@@ -64,7 +64,7 @@ namespace PlaygroundProject.Services.Implementations
 
             try
             {
-                user = JsonSerializer.Deserialize<UserViewModel>(jsonUser.Value.ToString());
+                user = System.Text.Json.JsonSerializer.Deserialize<UserViewModel>(jsonUser.Value.ToString());
             }
             catch (Exception e)
             {
@@ -95,7 +95,8 @@ namespace PlaygroundProject.Services.Implementations
 
             return new GetUserInfoResponse()
             {
-                User = customer
+                Success = true,
+                Customer = customer
             };
         }
 

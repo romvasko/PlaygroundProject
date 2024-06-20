@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PlaygroundProject.Services.Interfaces;
@@ -41,8 +42,18 @@ namespace PlaygroundProject.Controllers
         [Authorize]
         public async Task<IActionResult> GetUserInfo()
         {
-            var userInfoResult = _userService.GetUserInfo();
-            return Ok(userInfoResult);
+            var token = await HttpContext.GetTokenAsync("access_token");
+            if (token == null)
+            {
+                return BadRequest(new { error_message = "token_not_found" });
+            }
+            var userInfoResult = await _userService.GetUserInfo(token);
+            if (userInfoResult.Success)
+            {
+                return Ok(userInfoResult.Customer);
+            }
+            
+            return BadRequest(userInfoResult.ErrorMessage);
         }
     }
 }
