@@ -101,10 +101,6 @@ internal class Program
             pattern: "{controller=Home}/{action=Index}/{id?}");
         app.UseDeveloperExceptionPage();
 
-
-
-        app.MapGet("/", () => "Hello World!");
-
         app.Run();
     }
 }
