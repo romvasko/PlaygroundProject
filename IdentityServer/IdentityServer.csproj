@@ -22,8 +22,4 @@
     <ProjectReference Include="..\PlaygroundProject\PlaygroundProject.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
